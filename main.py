@@ -69,10 +69,7 @@ while True:
                 SCREEN.fill(WHITE)
             elif event.key == pygame.K_r:
                 sorting = False
-                generator = insertion_sort(lst)
-
-            elif event.key == pygame.K_e:
-                print_text(str(count), 100 + count * 20, 300)
+                lst = generate_list()
                 generator = insertion_sort(lst)
 
     if sorting:
@@ -84,6 +81,6 @@ while True:
 
     SCREEN.fill(WHITE)
     draw(output)
-    clock.tick(2)
+    clock.tick(6)
 
     pygame.display.update()
