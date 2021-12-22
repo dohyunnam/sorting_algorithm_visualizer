@@ -5,8 +5,10 @@ pygame.init()
 clock = pygame.time.Clock()
 WHITE = (255,255,255)
 BLACK = (0,0,0)
-GREY = (122, 122, 122)
+GREY1 = (122, 122, 122)
+GREY2 = (150, 150, 150)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 WIDTH = 800
 HEIGHT = 360
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
@@ -17,8 +19,19 @@ def generate_list():
     random.shuffle(lst)
     return lst
 
-def draw(lst, pos):
-    pass
+def draw(arg):
+    for i, ele in enumerate(arg[0]):
+        rect = pygame.Rect(60 + i*8 + 1, 200, 8, ele*15)
+        if i == arg[1]:
+            pygame.draw.rect(SCREEN, RED, rect)
+        elif i == arg[2]:
+            pygame.draw.rect(SCREEN, GREEN, rect)
+        elif i % 2 == 0:
+            pygame.draw.rect(SCREEN, GREY2, rect)
+        else:
+            pygame.draw.rect(SCREEN, GREY1, rect)
+    
+
 def insertion_sort(lst):
     for i in range(0, len(lst)):
         key = lst[i]
@@ -27,7 +40,7 @@ def insertion_sort(lst):
             lst[j + 1] = lst[j]
             j -= 1
         lst[j + 1] = key
-        yield lst, i
+        yield lst, i, j
 
 def print_text(word, x, y, color = BLACK):
     TEXT = FONT.render(word, True, color)
@@ -42,14 +55,9 @@ count = 0
 
 SCREEN.fill(WHITE)
 generator = insertion_sort(lst)
+output = ([], 0, 0)
 
 while True:
-    if sorting:
-        try:
-            pass
-        except StopIteration:
-                sorting = False
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -60,14 +68,22 @@ while True:
                 count = 0
                 SCREEN.fill(WHITE)
             elif event.key == pygame.K_r:
-                try:
-                    output = next(generator)
-                except StopIteration:
-                    sorting = False
-                print_text(str(output), 100, 100)
+                sorting = False
+                generator = insertion_sort(lst)
+
             elif event.key == pygame.K_e:
                 print_text(str(count), 100 + count * 20, 300)
                 generator = insertion_sort(lst)
 
-    clock.tick(100)
+    if sorting:
+        try:
+            SCREEN.fill(WHITE)
+            output = next(generator)
+        except StopIteration:
+            sorting = False
+
+    SCREEN.fill(WHITE)
+    draw(output)
+    clock.tick(2)
+
     pygame.display.update()
